@@ -1,0 +1,47 @@
+[
+    {
+        "id": "cand_001",
+        "name": "Sarah Chen",
+        "role": "Senior Fullstack Engineer",
+        "experience": 8,
+        "skills": ["Python", "React", "AWS", "TensorFlow", "PostgreSQL"],
+        "certifications": ["AWS Certified Solutions Architect", "TensorFlow Developer"],
+        "summary": "Experienced engineer with a focus on building scalable AI-integrated web applications. Expert in microservices architecture and cloud-native design patterns."
+    },
+    {
+        "id": "cand_002",
+        "name": "Marcus Rodriguez",
+        "role": "Lead Data Scientist",
+        "experience": 10,
+        "skills": ["Python", "R", "PyTorch", "Kubernetes", "Snowflake"],
+        "certifications": ["Google Cloud Professional Data Engineer"],
+        "summary": "Passionate about leveraging deep learning for predictive maintenance in industrial IoT. Skilled in leading cross-functional squads to deliver high-impact data products."
+    },
+    {
+        "id": "cand_003",
+        "name": "Elena Volkov",
+        "role": "Backend Architect",
+        "experience": 12,
+        "skills": ["Go", "Java", "Python", "Kafka", "Docker", "Redis"],
+        "certifications": ["CKAD - Certified Kubernetes Application Developer"],
+        "summary": "Distributed systems specialist with a track record of optimizing high-throughput data pipelines. Focused on reliability, latency, and observability in large-scale backend ecosystems."
+    },
+    {
+        "id": "cand_004",
+        "name": "Jordan Smith",
+        "role": "DevOps Engineer",
+        "experience": 6,
+        "skills": ["Terraform", "Jenkins", "AWS", "Python", "Bash"],
+        "certifications": ["AWS Certified DevOps Engineer - Professional"],
+        "summary": "Automation enthusiast with a deep understanding of CI/CD pipelines and infrastructure as code. Committed to improving developer productivity through robust tooling."
+    },
+    {
+        "id": "cand_005",
+        "name": "Aisha Khan",
+        "role": "Machine Learning Engineer",
+        "experience": 4,
+        "skills": ["Python", "Scikit-learn", "Azure", "NLP", "PySpark"],
+        "certifications": ["Microsoft Certified: Azure AI Engineer Associate"],
+        "summary": "Specializing in Natural Language Processing and big data analytics. Proven ability to translate complex business requirements into efficient machine learning models."
+    }
+]

@@ -1,59 +1,57 @@
-# Autonomous Skill-Architecture Agent
-### How I Orchestrated Multi-Agent Systems to Automate Market Analysis and Personalized Curriculum Design
+# TalentArch-AI: Architectural Talent Matching Agent
 
-![Title](https://raw.githubusercontent.com/aniket-work/autonomous-skill-architecture/main/images/title_animation.gif)
+> **Subtitle: How I Automated Skill-First Technical Recruitment Using Hybrid-Search RAG and Score Fusion**
 
-## 🚀 Overview
-The **Autonomous Skill-Architecture Agent** is an experimental multi-agent system designed to solve the real-world business problem of **Automated Career Transitioning**. In the rapidly evolving 2026 tech landscape, professionals struggle to keep up with shifting market demands. This project demonstrates how specialized AI agents can automate the entire transition lifecycle: from market research and gap analysis to curriculum design and resource orchestration.
+![Title Animation](images/title-animation.gif)
 
-> [!NOTE]
-> This project is a Proof of Concept (PoC) and is part of my personal experiments in multi-agent orchestration.
+## Overview
+TalentArch-AI is an experimental Proof of Concept (PoC) designed to solve the "needle in a haystack" problem in technical recruiting. By leveraging a **Hybrid-Search RAG** (Retrieval-Augmented Generation) pipeline, it combines the precision of keyword-based matching (identity-critical skills, tools, and certifications) with the depth of semantic retrieval (understanding context, seniority, and cultural fit).
 
-## 🏗️ System Architecture
+This project demonstrates how a custom scoring engine can prioritize candidates by fusing scores from **BM25** (Keyword) and **Vector Similarity** (Semantic) algorithms.
 
-![Architecture](https://raw.githubusercontent.com/aniket-work/autonomous-skill-architecture/main/images/architecture_diagram.png)
+## Key Features
+- 🚀 **Hybrid Search Engine**: Dual-path retrieval combining BM25 and semantic context.
+- 📊 **Statistical Matching**: Visual breakdown of candidate overlap vs. role requirements.
+- 🛠️ **Score Fusion**: Configurable weights to prioritize exact skills or conceptual fit.
+- 📜 **Mock Pipeline**: Ready-to-run environment with synthetic resume datasets.
 
-The system is composed of four distinct agents:
-1. **Market Pulse (Analyst)**: Identifies high-demand skills for target roles.
-2. **Gap Finder (Evaluator)**: Performs cross-reference comparison between user and market.
-3. **Roadmap Maker (Architect)**: Designs a structured, phase-based learning path.
-4. **Source Finder (Scout)**: Curates specific technical resources for each milestone.
+## Architecture
+![Architecture](images/architecture-diagram.png)
 
-## 📊 Performance Metrics
+### Retrieval Flow
+1. **Keyword Path**: Uses BM25 to find exact matches for mandatory tech stacks (e.g., "Python", "Kubernetes").
+2. **Semantic Path**: Analyzes candidate summaries to understand architectural seniority and domain expertise.
+3. **Fusion**: A weighted linear combination merges these signals into a final "Architectural Fit" score.
 
-| Metric | Outcome |
-| :--- | :--- |
-| **Analysis Depth** | 5-Level Skill Taxonomy |
-| **Resource Coverage** | 95%+ Domain Alignment |
-| **Architectural Speed** | < 10s for Full Roadmap |
-
-![Skill Radar](https://raw.githubusercontent.com/aniket-work/autonomous-skill-architecture/main/images/skill_radar.png)
-
-## 🛠️ Tech Stack
-- **Orchestration**: Python Multi-Agent Logic
-- **Visualization**: Matplotlib, PIL
-- **Diagrams**: Mermaid.js (via mermaid.ink)
-- **Data Engine**: Pandas, NumPy
-
-## 🚦 Getting Started
-
-### Prerequisites
-- Python 3.9+
-- Virtual Environment (recommended)
-
-### Installation
+## Let's Run
 ```bash
-git clone https://github.com/aniket-work/autonomous-skill-architecture.git
-cd autonomous-skill-architecture
+# Clone the repository
+git clone https://github.com/aniket-work/talent-arch-ai.git
+cd talent-arch-ai
+
+# Initialize environment
 python3 -m venv venv
 source venv/bin/activate
 pip install -r requirements.txt
+
+# Execute the experiment
+python talent_arch.py
 ```
 
-### Execution
-```bash
-python main.py
+### Sample Output
+```text
+[*] Initializing Hybrid Search for query: 'Cloud native engineer...'
+[OK] Fusion Scoring Complete
+
+CANDIDATE NAME            | ROLE                      | HYBRID SCORE
+--------------------------------------------------------------------------------
+Jordan Smith              | DevOps Engineer           | 0.82        
+Sarah Chen                | Senior Fullstack Engineer | 0.6565      
 ```
 
-## 📜 License
-MIT License - Personal Experimental Project
+## Statistical Analysis
+![Skill Distribution](images/skill-distribution.png)
+![Pipeline Stats](images/pipeline-stats.png)
+
+---
+*Disclaimer: This is an experimental PoC and not intended for production HR environments. All candidate data is synthetic.*
