@@ -2,38 +2,39 @@ import os
 import requests
 import json
 
-def publish_to_devto():
+def publish_to_devto(article_path):
     api_key = os.getenv("DEVTO_API_KEY")
     if not api_key:
-        print("❌ DEVTO_API_KEY not found in environment.")
+        # Check if it exists in a .env locally (though instructions say check .env)
+        try:
+            with open(".env", "r") as f:
+                for line in f:
+                    if line.startswith("DEVTO_API_KEY="):
+                        api_key = line.split("=")[1].strip()
+        except:
+            pass
+            
+    if not api_key:
+        print("[!] DEVTO_API_KEY not found. Cannot publish.")
         return
 
-    # Load article content
-    with open("../generated_article.md", "r") as f:
+    with open(article_path, 'r') as f:
         content = f.read()
 
-    # Extract frontmatter (simple split)
-    parts = content.split("---")
-    if len(parts) < 3:
-        print("❌ Article frontmatter missing or malformed.")
-        return
+    # Extract title and tags from content or define them
+    # For reliability, we send metadata in the payload
+    # Standard format: { "article": { "title": "...", "body_markdown": "...", "published": true, "tags": [...] } }
     
-    # Extract metadata manually (for cleaner API payload)
-    title = "Building an Autonomous Skill-Architecture Agent for Rapid Career Transition"
-    subtitle = "How I Orchestrated Multi-Agent Systems to Automate Market Analysis and Personalized Curriculum Design"
-    tags = ["ai", "python", "agents", "edtech"]
+    # Simple extraction for this script
+    title = "TalentArch-AI: Building an Architectural Talent Matching Agent"
+    tags = ["ai", "python", "rag", "recruitment"]
     
-    # The body is everything after the second '---'
-    body_markdown = "---".join(parts[2:]).strip()
-
     payload = {
         "article": {
             "title": title,
-            "description": subtitle,
-            "body_markdown": body_markdown,
+            "body_markdown": content,
             "published": True,
-            "tags": tags,
-            "main_image": "https://raw.githubusercontent.com/aniket-work/autonomous-skill-architecture/main/images/title-animation.gif"
+            "tags": tags
         }
     }
 
@@ -43,16 +44,15 @@ def publish_to_devto():
         "api-key": api_key
     }
 
-    print(f"Publishing article: '{title}'...")
     response = requests.post(url, headers=headers, data=json.dumps(payload))
-
+    
     if response.status_code == 201:
-        data = response.json()
-        print(f"✅ Article successfully published to Dev.to!")
-        print(f"🔗 URL: {data['url']}")
+        print(f"[v] Article published successfully!")
+        print(f"URL: {response.json().get('url')}")
     else:
-        print(f"❌ Failed to publish. Status: {response.status_code}")
+        print(f"[x] Error publishing: {response.status_code}")
         print(response.text)
 
 if __name__ == "__main__":
-    publish_to_devto()
+    article_file = os.path.join(os.path.dirname(__file__), "..", "generated_article.md")
+    publish_to_devto(article_file)
