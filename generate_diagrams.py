@@ -1,86 +1,98 @@
 import base64
 import requests
 import os
+import time
 
-def generate_mermaid_diagrams():
-    diagrams = {
-        "title_diagram": """
-graph TD
-    classDef main fill:#1e1e2e,stroke:#00ffcc,stroke-width:2px,color:#fff
-    classDef sub fill:#313244,stroke:#89b4fa,stroke-width:1px,color:#fff
+def generate_diagram(name, code):
+    print(f"Generating {name}...")
+    encoded = base64.b64encode(code.encode()).decode()
+    url = f"https://mermaid.ink/img/{encoded}"
     
-    A["TalentArch-AI Platform"]:::main --> B["Deep Query Parsing"]:::sub
-    B --> C["Hybrid Retrieval Engine"]:::main
-    C --> D["Vector Semantic Search"]:::sub
-    C --> E{"Keyword Match (BM25)"}:::sub
-    D --> F["Rerank & Score Fusion"]:::main
-    E --> F
-    F --> G["Architectural Fit Report"]:::sub
-        """,
-        "architecture_diagram": """
-graph LR
-    User([Talent Partner]) -- "Query (Role Specs)" --> Agent[TalentArch Agent]
-    subgraph Engine [Hybrid RAG Engine]
-        direction TB
-        BM25[BM25 Index]
-        Vector[Vector DB / Embeddings]
-        Fusion[Weighted Score Fusion]
-    end
-    Agent --> Engine
-    Engine --> Data[(Resume JSON/PDF)]
-    Fusion --> Rerank[Reranking Module]
-    Rerank --> Output[Final Candidate Rankings]
-        """,
-        "sequence_diagram": """
-sequenceDiagram
-    participant U as User
-    participant A as TalentArch Agent
-    participant K as Keyword Index
-    participant S as Semantic Store
-    participant F as Score Fusion
-    
-    U->>A: Submit 'Cloud Engineer' search
-    par Concurrent Retrieval
-        A->>K: BM25 Keyword Search
-        A->>S: Cosine Similarity Search
-    end
-    K-->>F: Raw Keyword Scores
-    S-->>F: Semantic Match Scores
-    F->>F: Weighted RRF / Linear Merge
-    F-->>A: Rank Candidate List
-    A-->>U: Present Final Matching Report
-        """,
-        "flow_diagram": """
-flowchart TD
-    Start([Start Search]) --> Parse[Role Requirement Extraction]
-    Parse --> Search{Hybrid Retrieval}
-    Search --> Vector[Semantic Vector Path]
-    Search --> Keyword[BM25 Keyword Path]
-    Vector --> Score[Raw Scoring]
-    Keyword --> Score
-    Score --> Weight[Apply Hybrid Weights]
-    Weight --> Rerank[Contextual Reranking]
-    Rerank --> End([Generate PDF/Console Report])
-        """
-    }
-
-    img_dir = os.path.join(os.path.dirname(__file__), "images")
-    if not os.path.exists(img_dir):
-        os.makedirs(img_dir)
-
-    for name, code in diagrams.items():
-        encoded = base64.b64encode(code.encode()).decode()
-        url = f"https://mermaid.ink/img/{encoded}"
+    max_retries = 3
+    for attempt in range(max_retries):
         try:
             response = requests.get(url, timeout=30)
             if response.status_code == 200:
-                with open(os.path.join(img_dir, f"{name.replace('_', '-')}.png"), 'wb') as f:
+                with open(f"images/{name}.png", 'wb') as f:
                     f.write(response.content)
-                print(f"[v] Generated {name}")
+                print(f"Successfully generated images/{name}.png")
+                return True
             else:
-                print(f"[x] Failed to generate {name}: {response.status_code}")
+                print(f"Error {response.status_code} for {name}")
         except Exception as e:
-            print(f"[!] Error generating {name}: {e}")
+            print(f"Attempt {attempt+1} failed for {name}: {str(e)}")
+        time.sleep(2)
+    return False
+
+diagrams = {
+    "architecture-diagram": """
+graph TB
+    subgraph Local_Environment ["Local Workstation (Secure)"]
+        A[Sensitive Docs: PDF/TXT] --> B(VaultGuard Ingestor)
+        B --> C[(ChromaDB: Semantic)]
+        B --> D[(BM25: Keyword)]
+        E[User Query] --> F(Hybrid Retriever)
+        C --> F
+        D --> F
+        F --> G{RRF Re-ranking}
+        G --> H[Local Context]
+        H --> I(Local LLM: Ollama)
+        I --> J[Professional Investment Analysis]
+    end
+    style Local_Environment fill:#f9f9f9,stroke:#333,stroke-width:2px
+    """,
+    "sequence-diagram": """
+sequenceDiagram
+    participant Analyst
+    participant Retriever
+    participant VectorDB
+    participant LocalLLM
+    
+    Analyst->>Retriever: Confidential Query
+    par Semantic Search
+        Retriever->>VectorDB: Similarity Query
+        VectorDB-->>Retriever: Top K Dense Results
+    and Keyword Search
+        Retriever->>Retriever: BM25 Scoring
+        Retriever-->>Retriever: Top K Sparse Results
+    end
+    Retriever->>Retriever: Reciprocal Rank Fusion
+    Retriever->>LocalLLM: Prompt with Local Context
+    LocalLLM-->>Analyst: Private Execution Result
+    """,
+    "flow-diagram": """
+flowchart TD
+    Start([Start Analysis]) --> Load[Load Private Documents]
+    Load --> Split[Recursive Semantic Chunking]
+    Split --> Index[Dual Indexing: Vector + Keyword]
+    Index --> Query[Analyst Input Query]
+    Query --> Hybrid[Hybrid Search Logic]
+    Hybrid --> RRF[RRF Re-ranking]
+    RRF --> Context[Augment Prompt with Local Context]
+    Context --> Inference[Ollama Local Inference]
+    Inference --> End([Generate Professional Report])
+    """,
+    "title-diagram": """
+graph LR
+    A[VaultGuard-AI] --- B((Local RAG))
+    B --- C{Hybrid Search}
+    C --- D[Confidential Intelligence]
+    style A fill:#1e3a8a,color:#fff
+    style D fill:#16a34a,color:#fff
+    """
+}
 
 if __name__ == "__main__":
-    generate_mermaid_diagrams()
+    if not os.path.exists("images"):
+        os.makedirs("images")
+    
+    all_success = True
+    for name, code in diagrams.items():
+        if not generate_diagram(name, code):
+            all_success = False
+    
+    if all_success:
+        print("\nAll technical diagrams generated successfully.")
+    else:
+        print("\nSome diagrams failed to generate.")
+        exit(1)

@@ -1,103 +1,111 @@
-from PIL import Image, ImageDraw, ImageFont
 import os
 import time
+from PIL import Image, ImageDraw, ImageFont
 
-def create_terminal_frame(text, width=800, height=500, cursor=True, frame_idx=0):
-    # Dark terminal theme
-    bg_color = (30, 30, 46)
-    text_color = (205, 214, 244)
-    header_color = (49, 50, 68)
-    
-    img = Image.new('RGB', (width, height), color=bg_color)
+def create_terminal_frame(text, step, total_steps, mode="typing"):
+    # Mac terminal dimensions
+    width, height = 1200, 800
+    img = Image.new('RGB', (width, height), color=(30, 30, 30))
     draw = ImageDraw.Draw(img)
     
-    # Draw Mac-style title bar
-    draw.rectangle([0, 0, width, 30], fill=header_color)
+    # Title bar
+    draw.rectangle([0, 0, width, 40], fill=(60, 60, 60))
     # Window controls
-    draw.ellipse([10, 8, 22, 20], fill=(255, 95, 87)) # Red
-    draw.ellipse([30, 8, 42, 20], fill=(255, 189, 46)) # Yellow
-    draw.ellipse([50, 8, 62, 20], fill=(40, 200, 64)) # Green
+    draw.ellipse([15, 12, 30, 27], fill=(255, 95, 87)) # Red
+    draw.ellipse([40, 12, 55, 27], fill=(255, 189, 46)) # Yellow
+    draw.ellipse([65, 12, 80, 27], fill=(39, 201, 63)) # Green
     
-    # Try to load a monospaced font
     try:
-        font = ImageFont.truetype("/System/Library/Fonts/Menlo.ttc", 16)
+        font = ImageFont.truetype("/System/Library/Fonts/Monaco.ttf", 24)
     except:
         font = ImageFont.load_default()
-        
-    y_offset = 50
-    lines = text.split('\n')
-    for line in lines:
-        draw.text((20, y_offset), line, font=font, fill=text_color)
-        y_offset += 25
-        
-    if cursor and (frame_idx // 2) % 2 == 0:
-        # Blinking cursor
-        last_line_width = draw.textlength(lines[-1], font=font) if lines else 0
-        draw.rectangle([20 + last_line_width, y_offset - 25, 20 + last_line_width + 10, y_offset - 5], fill=text_color)
-        
+
+    y_offset = 60
+    prompt = "aniket@mac:~/VaultGuard-AI$ "
+    draw.text((20, y_offset), f"{prompt}{text[:step]}", fill=(200, 200, 200), font=font)
+    
+    # Blinking cursor
+    if (int(time.time() * 2) % 2 == 0):
+        draw.text((20 + draw.textlength(f"{prompt}{text[:step]}", font=font), y_offset), "_", fill=(255, 255, 255), font=font)
+
+    if mode == "output":
+        output = """
+[INFO] Initializing VaultGuard Engine...
+[INFO] Loading: sample_report.txt
+[INFO] Chunks Created: 4
+[INFO] Indexing ChromaDB... Done.
+[INFO] Indexing BM25... Done.
+
+[RESULT] ----------------------------------------
+| Metric         | Value                        |
+|----------------|------------------------------|
+| Expected IRR   | 25%                          |
+| Strategy       | Private Equity               |
+| Region         | Southeast Asia               |
+| Compliance     | SEC Reg D (Simulated)        |
+-------------------------------------------------
+        """
+        draw.text((20, y_offset + 40), output, fill=(0, 255, 0), font=font)
+
     return img
 
-def generate_gif(output_path):
+def create_ui_frame(step):
+    width, height = 1200, 800
+    img = Image.new('RGB', (width, height), color=(240, 242, 246))
+    draw = ImageDraw.Draw(img)
+    
+    # Sidebar
+    draw.rectangle([0, 0, 300, height], fill=(14, 38, 74))
+    
+    # Main Content Area
+    draw.text((350, 50), "VaultGuard-AI Dashboard", fill=(30, 30, 30), font=ImageFont.load_default())
+    
+    # Card 1: Results
+    draw.rectangle([350, 100, 1150, 300], fill=(255, 255, 255), outline=(200, 200, 200))
+    draw.text((370, 120), "Analysis Result:", fill=(0, 0, 0), font=ImageFont.load_default())
+    draw.text((370, 150), "The Southeast Asian market shows high volatility but the Project X IRR", fill=(50, 50, 50), font=ImageFont.load_default())
+    draw.text((370, 170), "stays robust at 25% due to hedging strategies mentioned in the PPM.", fill=(50, 50, 50), font=ImageFont.load_default())
+
+    # Card 2: Chart
+    draw.rectangle([350, 350, 1150, 750], fill=(255, 255, 255), outline=(200, 200, 200))
+    # Dummy chart lines
+    for i in range(10):
+        h = 100 + (i * 20)
+        draw.rectangle([400 + (i*60), 730 - h, 430 + (i*60), 730], fill=(22, 163, 74))
+
+    return img
+
+def generate_gif():
+    print("Generating Title Animation GIF...")
     frames = []
     
-    command = "$ python talent_arch.py --query 'Cloud Native Engineer'"
-    output_log = [
-        "[*] Initializing Hybrid Search Engine...",
-        "[+] Connected to Local Vector DB (Qdrant)",
-        "[+] Keyword Index (BM25) Initialized",
-        "[*] Query: 'Cloud Native Engineer'",
-        "[*] Performing Semantic Analysis (Weight: 0.6)...",
-        "[*] Performing Keyword Match (Weight: 0.4)...",
-        "[OK] Fusion Scoring Complete",
-        "",
-        "SUMMARY REPORT:",
-        "--------------------------------------------------",
-        "Jordan Smith      | Lead DevOps     | 0.82",
-        "Sarah Chen        | Fullstack Dev   | 0.65",
-        "--------------------------------------------------"
-    ]
+    # Part 1: Terminal Typing
+    cmd = "python main.py"
+    for i in range(len(cmd) + 1):
+        frames.append(create_terminal_frame(cmd, i, len(cmd)))
     
-    # Part 1: Typing animation
-    current_text = ""
-    for i in range(len(command) + 1):
-        current_text = command[:i]
-        frames.append(create_terminal_frame(current_text, frame_idx=len(frames)))
+    # Part 2: Terminal Output (Hold)
+    for _ in range(15):
+        frames.append(create_terminal_frame(cmd, len(cmd), len(cmd), mode="output"))
+    
+    # Part 3: UI Transition
+    for i in range(10):
+        frames.append(create_ui_frame(i))
+    
+    # Save GIF
+    if not os.path.exists("images"):
+        os.makedirs("images")
         
-    # Part 2: Wait & Hold
-    for _ in range(5):
-        frames.append(create_terminal_frame(command, frame_idx=len(frames)))
-        
-    # Part 3: Show execution logs incrementally
-    current_content = command + "\n"
-    for line in output_log:
-        current_content += line + "\n"
-        # Slow down for the summary
-        repeat = 3 if "SUMMARY" in line else 1
-        for _ in range(repeat):
-            frames.append(create_terminal_frame(current_content, frame_idx=len(frames)))
-            
-    # Part 4: Transition and UI Component (Skill Distribution Chart)
-    ui_img_path = os.path.join(os.path.dirname(__file__), "images", "skill-distribution.png")
-    if os.path.exists(ui_img_path):
-        ui_img = Image.open(ui_img_path).resize((800, 500))
-        for _ in range(15): # Hold UI for 3-4s
-            frames.append(ui_img)
-            
-    # Save GIF with global adaptive palette
-    if frames:
-        frames = [f.convert('P', palette=Image.ADAPTIVE) for f in frames]
-        frames[0].save(
-            output_path,
-            save_all=True,
-            append_images=frames[1:],
-            duration=120,
-            loop=0,
-            optimize=True
-        )
-        print(f"[v] Saved animated GIF to {output_path}")
+    frames[0].save(
+        "images/title-animation.gif",
+        save_all=True,
+        append_images=frames[1:],
+        duration=100,
+        loop=0,
+        optimize=True,
+        palette=Image.ADAPTIVE
+    )
+    print("Successfully generated images/title-animation.gif")
 
 if __name__ == "__main__":
-    img_dir = os.path.join(os.path.dirname(__file__), "images")
-    if not os.path.exists(img_dir):
-        os.makedirs(img_dir)
-    generate_gif(os.path.join(img_dir, "title-animation.gif"))
+    generate_gif()
