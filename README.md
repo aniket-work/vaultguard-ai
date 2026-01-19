@@ -1,57 +1,85 @@
-# TalentArch-AI: Architectural Talent Matching Agent
+# 🛡️ VaultGuard-AI: Local-First Confidential Portfolio Intelligence
 
-> **Subtitle: How I Automated Skill-First Technical Recruitment Using Hybrid-Search RAG and Score Fusion**
+[![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)](https://github.com/aniket-work/vaultguard-ai)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 
-![Title Animation](images/title-animation.gif)
+![Title Animation](https://raw.githubusercontent.com/aniket-work/vaultguard-ai/main/images/title-animation.gif)
 
-## Overview
-TalentArch-AI is an experimental Proof of Concept (PoC) designed to solve the "needle in a haystack" problem in technical recruiting. By leveraging a **Hybrid-Search RAG** (Retrieval-Augmented Generation) pipeline, it combines the precision of keyword-based matching (identity-critical skills, tools, and certifications) with the depth of semantic retrieval (understanding context, seniority, and cultural fit).
+## 📖 Overview
 
-This project demonstrates how a custom scoring engine can prioritize candidates by fusing scores from **BM25** (Keyword) and **Vector Similarity** (Semantic) algorithms.
+**VaultGuard-AI** is a high-performance, privacy-preserving intelligence agent designed for Private Equity analysts and Wealth Managers. It enables local analysis of sensitive Private Placement Memorandums (PPMs), financial audits, and confidential reports without ever sending data to the cloud.
 
-## Key Features
-- 🚀 **Hybrid Search Engine**: Dual-path retrieval combining BM25 and semantic context.
-- 📊 **Statistical Matching**: Visual breakdown of candidate overlap vs. role requirements.
-- 🛠️ **Score Fusion**: Configurable weights to prioritize exact skills or conceptual fit.
-- 📜 **Mock Pipeline**: Ready-to-run environment with synthetic resume datasets.
+Built with a **Hybrid Search RAG Architecture**, it combines dense semantic retrieval with sparse keyword matching to ensure maximum accuracy for specific financial terminology and broad conceptual queries.
 
-## Architecture
-![Architecture](images/architecture-diagram.png)
+## 🚀 Key Features
 
-### Retrieval Flow
-1. **Keyword Path**: Uses BM25 to find exact matches for mandatory tech stacks (e.g., "Python", "Kubernetes").
-2. **Semantic Path**: Analyzes candidate summaries to understand architectural seniority and domain expertise.
-3. **Fusion**: A weighted linear combination merges these signals into a final "Architectural Fit" score.
+- **100% Local Execution**: Runs entirely on your machine using Ollama and local embedding models.
+- **Hybrid Search Engine**: Integrated BM25 + Semantic Vector Search with Reciprocal Rank Fusion (RRF).
+- **Intelligent Chunking**: Document processing optimized for complex financial tables and reports.
+- **Analytical Dashboard**: Professional Streamlit UI for deep-dive portfolio analysis and statistical visualization.
+- **Technical ASCII Output**: High-fidelity terminal logs for debugging and transparency.
 
-## Let's Run
-```bash
-# Clone the repository
-git clone https://github.com/aniket-work/talent-arch-ai.git
-cd talent-arch-ai
+## 🏗️ Architecture
 
-# Initialize environment
-python3 -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
+![System Architecture](https://raw.githubusercontent.com/aniket-work/vaultguard-ai/main/images/architecture-diagram.png)
 
-# Execute the experiment
-python talent_arch.py
-```
+## 🛠️ Tech Stack
 
-### Sample Output
-```text
-[*] Initializing Hybrid Search for query: 'Cloud native engineer...'
-[OK] Fusion Scoring Complete
+- **Core**: Python 3.10+
+- **Retrieval**: LangChain, ChromaDB (Vector Store), Rank-BM25 (Keyword Search)
+- **Embeddings**: HuggingFace (`all-MiniLM-L6-v2`)
+- **Inference**: Ollama (Llama 3 / Mistral)
+- **UI**: Streamlit, Matplotlib, Seaborn
 
-CANDIDATE NAME            | ROLE                      | HYBRID SCORE
---------------------------------------------------------------------------------
-Jordan Smith              | DevOps Engineer           | 0.82        
-Sarah Chen                | Senior Fullstack Engineer | 0.6565      
-```
+## 🚦 Getting Started
 
-## Statistical Analysis
-![Skill Distribution](images/skill-distribution.png)
-![Pipeline Stats](images/pipeline-stats.png)
+### Prerequisites
+
+1. Install [Ollama](https://ollama.com/).
+2. Pull the required model:
+   ```bash
+   ollama pull llama3
+   ```
+
+### Installation
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/aniket-work/vaultguard-ai.git
+   cd vaultguard-ai
+   ```
+
+2. Setup virtual environment:
+   ```bash
+   python3 -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. Install dependencies:
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+### Running the Engine
+
+- **Terminal Mode (CLI)**:
+  ```bash
+  python main.py
+  ```
+
+- **Dashboard Mode (UI)**:
+  ```bash
+  streamlit run app.py
+  ```
+
+## 📊 Process Flow
+
+![Sequence Diagram](https://raw.githubusercontent.com/aniket-work/vaultguard-ai/main/images/sequence-diagram.png)
+
+## 📜 Disclaimer
+
+This is an experimental proof-of-concept (PoC) project. It is intended for educational and demonstration purposes only and should not be used for production investment decisions without further auditing.
 
 ---
-*Disclaimer: This is an experimental PoC and not intended for production HR environments. All candidate data is synthetic.*
+Developed as a personal experiment in local-first AI architectures.
